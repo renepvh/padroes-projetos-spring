@@ -8,4 +8,6 @@ public interface ClientService {
     void insert(Client client);
 
     Client fetchById(Long id);
+
+    void update(Long id, Client client);
 }

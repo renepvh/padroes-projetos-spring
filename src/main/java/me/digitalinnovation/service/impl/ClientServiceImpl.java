@@ -9,6 +9,8 @@ import me.digitalinnovation.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ClientServiceImpl implements ClientService {
 
@@ -26,6 +28,23 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void insert(Client client) {
+        saveCustomerWithZipCode(client);
+    }
+
+    @Override
+    public Client fetchById(Long id) {
+        return clientRepository.findById(id).get();
+    }
+
+    @Override
+    public void update(Long id, Client client) {
+        Optional<Client> clientDB = clientRepository.findById(id);
+        if (clientDB.isPresent()) {
+            saveCustomerWithZipCode(client);
+        }
+    }
+
+    public void saveCustomerWithZipCode(Client client) {
         String zipCode = client.getAddress().getCep();
         Address address = addressRepository.findById(zipCode).orElseGet(() -> {
             Address newAddress = byZipCode.consultZipCode(zipCode);
@@ -34,10 +53,5 @@ public class ClientServiceImpl implements ClientService {
         });
         client.setAddress(address);
         clientRepository.save(client);
-    }
-
-    @Override
-    public Client fetchById(Long id) {
-        return clientRepository.findById(id).get();
     }
 }

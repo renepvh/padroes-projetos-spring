@@ -29,4 +29,10 @@ public class ClientRestController {
         return ResponseEntity.ok(clientService.fetchById(id));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Client> update(@PathVariable Long id, @RequestBody Client client) {
+        clientService.update(id, client);
+        return ResponseEntity.ok(client);
+    }
+
 }
