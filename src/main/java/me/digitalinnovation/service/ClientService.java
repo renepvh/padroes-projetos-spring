@@ -6,4 +6,6 @@ public interface ClientService {
     Iterable<Client> fetchAll();
 
     void insert(Client client);
+
+    Client fetchById(Long id);
 }

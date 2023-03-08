@@ -23,4 +23,10 @@ public class ClientRestController {
         clientService.insert(client);
         return ResponseEntity.ok(client);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Client> fetchById(@PathVariable Long id) {
+        return ResponseEntity.ok(clientService.fetchById(id));
+    }
+
 }
