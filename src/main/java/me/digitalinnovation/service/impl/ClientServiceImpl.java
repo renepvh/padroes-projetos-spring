@@ -44,6 +44,11 @@ public class ClientServiceImpl implements ClientService {
         }
     }
 
+    @Override
+    public void delete(Long id) {
+        clientRepository.deleteById(id);
+    }
+
     public void saveCustomerWithZipCode(Client client) {
         String zipCode = client.getAddress().getCep();
         Address address = addressRepository.findById(zipCode).orElseGet(() -> {

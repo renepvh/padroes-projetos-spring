@@ -10,4 +10,6 @@ public interface ClientService {
     Client fetchById(Long id);
 
     void update(Long id, Client client);
+
+    void delete(Long id);
 }
