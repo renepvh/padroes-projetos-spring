@@ -1,10 +1,17 @@
 package me.digitalinnovation.controller;
 
+import jakarta.validation.Valid;
 import me.digitalinnovation.model.Client;
 import me.digitalinnovation.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("clientes")
@@ -19,7 +26,7 @@ public class ClientRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Client> insert(@RequestBody Client client) {
+    public ResponseEntity<Client> insert(@RequestBody @Valid Client client) {
         clientService.insert(client);
         return ResponseEntity.ok(client);
     }
@@ -39,6 +46,21 @@ public class ClientRestController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         clientService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidation(MethodArgumentNotValidException ex) {
+        Map<String,String> errors = new HashMap<>();
+
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+
+            errors.put(fieldName, errorMessage);
+        });
+
+        return errors;
     }
 
 }
